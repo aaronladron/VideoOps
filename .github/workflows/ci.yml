@@ -78,26 +78,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build Docker image
-        id: docker_build
-        run: docker build -t videogames:latest .
-      
-      - name: Test Docker image
-        run: |
-          docker run --rm -d --name test-container -p 8080:8080 videogames:latest
-          sleep 2
-          curl -f http://localhost:8080 || exit 1
-          docker stop test-container
-      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -109,12 +89,10 @@ jobs:
           echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Status" >> $GITHUB_STEP_SUMMARY
-          echo "✓ Docker image built successfully" >> $GITHUB_STEP_SUMMARY
-          echo "✓ Image validated" >> $GITHUB_STEP_SUMMARY
           echo "✓ GitHub Pages deployment activated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docker Image**: videogames:latest" >> $GITHUB_STEP_SUMMARY
-          echo "- **Web Server**: http-server on port 8080" >> $GITHUB_STEP_SUMMARY
+          echo "### Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: main" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target**: GitHub Pages" >> $GITHUB_STEP_SUMMARY
 
 
