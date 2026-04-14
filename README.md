@@ -1,161 +1,70 @@
-# Video Games - Projet DevOps
+docker run -p 8080:8080 videogames:latest
+# VideoOps
 
-Un projet académique de démonstration DevOps/CI-CD avec deux jeux JavaScript, testés automatiquement et déployés via GitHub Actions sur GitHub Pages.
+Projet académique DevOps basé sur deux jeux JavaScript rétro, une vitrine web simple et des workflows GitHub Actions séparés par responsabilité.
 
-## 📋 Contenu
+## Vue d’ensemble
 
-- **SpaceWord** - Jeu d'action avec obstacles dynamiques et système de scoring
-- **Keep White Space** - Jeu défensif pour protéger l'espace blanc
+- `games/spaceword/` contient le jeu SpaceWord avec son propre sous-projet npm.
+- `games/keep-white-space/` contient Keep White Space avec le même découpage.
+- `web/` contient la page d’accueil publiée sur GitHub Pages.
+- `docs/` contient les captures et rapports de sortie.
 
-## ✨ Infrastructure DevOps
+## CI/CD
 
-### Contrôle Continu (CI)
+Le dépôt utilise trois workflows.
 
-Le workflow GitHub Actions (`.github/workflows/ci.yml`) automatise les étapes suivantes sur chaque `push` et `pull_request` :
+- [`.github/workflows/ci-spaceword.yml`](.github/workflows/ci-spaceword.yml) lance les tests, le lint et l’audit pour SpaceWord.
+- [`.github/workflows/ci-keep-white-space.yml`](.github/workflows/ci-keep-white-space.yml) fait la même chose pour Keep White Space.
+- [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) vérifie que les deux CI du commit courant ont réussi puis déploie la plateforme sur GitHub Pages.
 
-```
-1. Vérification de la structure des jeux
-2. Exécution des 26 tests (unit + fonctionnels)
-3. Linting ESLint (règles personnalisées)
-4. npm audit (vérification de sécurité des dépendances)
-5. Construction de l'image Docker
-6. Test de l'image Docker
-7. Rapports détaillés (annotations et résumés)
-```
+## Vérifications
 
-**Déclencheurs du workflow** :
-- ✅ Manuel via `workflow_dispatch`
-- ✅ Automatique sur chaque push (toutes les branches)
-- ✅ Automatique sur pull requests vers `main`
+La base de validation est la suivante :
 
-### Déploiement Continu (CD)
+- 26 tests au total, 13 par jeu.
+- Les 8 tests unitaires fournis par l’énoncé sont couverts.
+- Chaque jeu ajoute ses tests unitaires et fonctionnels propres.
+- `npm audit` est exécuté dans chaque sous-projet.
+- ESLint est configuré au niveau de chaque jeu et pour la vitrine web.
 
-Sur la branche `main` :
-1. GitHub Pages : publication automatique du site web
-2. Docker : construction de l'image `videogames:latest`
-3. Validation : test de l'image avant déploiement
+## Commandes utiles
 
-### Tests (26 tests)
-
-#### Tests Unitaires (20 tests)
-- **SpaceWord** (10 tests)
-  - Validation des bornes de `getRandomInt`
-  - Détection de collisions (rectangles et cercles)
-  - Formatage du temps (`timeToString`)
-  - Génération aléatoire dans les limites
-
-- **Keep White Space** (10 tests)
-  - Création et manipulation de vecteurs (`Vec`)
-  - Opérations vectorielles (add, mul, dot, cross)
-  - Formatage du temps du jeu
-  - Gestion des cas limites (vecteurs nuls, invalides)
-
-#### Tests Fonctionnels (6 tests)
-- Initialisation du jeu et configuration du canvas
-- Démarrage d'une partie
-- Réinitialisation de l'état du jeu
-- Interaction clavier et affichage
-
-**Technologie** : Vitest 4.1.4 avec sandbox Node.js VM pour l'isolation
-
-### Qualité du Code
-
-- **Linting** : ESLint (configuration personnalisée)
-  - Détection des variables non utilisées
-  - Vérification de l'existence des variables
-  - Globals du navigateur reconnus
-  
-- **Dépendances** : npm audit avec niveau de sécurité modéré
-  - Détection des vulnérabilités haute et critique
-  - Rapports automatiques dans le workflow
-
-### Containerisation
-
-- **Dockerfile** : serveur web léger (Node.js Alpine + http-server)
-- **docker-compose.yml** : facilite le lancement local
-- Validation de l'image dans le workflow CI
-
-## 🚀 Utilisation Locale
-
-### Installation des dépendances
-```bash
-npm install
-```
-
-### Exécution des tests
-```bash
-# Tous les tests
-npm test
-
-# Seulement les tests unitaires
-npm test:unit
-
-# Seulement les tests fonctionnels
-npm test:functional
-```
-
-### Linting du code
-```bash
-npm run lint
-```
-
-### Vérification de la structure
 ```bash
 npm run check:games
+npm test
+npm run lint
+npm run audit
+npm run serve
+npm run docker:compose
 ```
 
-### Build et lancement avec Docker
-```bash
-# Build local
-docker build -t videogames:latest .
+## Déploiement local
 
-# Lancement
-docker run -p 8080:8080 videogames:latest
+- La vitrine est servie depuis `web/`.
+- `docker-compose.yml` lance le site web sur `http://localhost:8080`.
+- Chaque jeu dispose aussi de son `Dockerfile` pour être servi seul si besoin.
 
-# Avec docker-compose
-docker-compose up
-```
+## Structure
 
-L'application est alors accessible à `http://localhost:8080`
-
-## 📊 Rapports et Métriques
-
-Le workflow génère des rapports détaillés pour chaque exécution :
-- Résumé des tests (nombre total, status par jeu)
-- Résultats du linting
-- Résultats de l'audit de sécurité
-- Détails du déploiement (images Docker, artefacts)
-
-Consultez l'onglet "Actions" du dépôt GitHub pour voir l'historique complet.
-
-## 🏗️ Architecture
-
-```
-project/
-├── games/               # Jeux JavaScript
-│   ├── SpaceWord/
+```text
+video-ops/
+├── .github/
+│   └── workflows/
+├── games/
+│   ├── spaceword/
 │   └── keep-white-space/
-├── tests/               # Suites de tests
-│   ├── unit/            # Tests unitaires
-│   ├── functional/       # Tests fonctionnels
-│   └── helpers/         # Utilitaires de test
-├── scripts/             # Scripts DevOps
-├── .github/workflows/   # Workflows GitHub Actions
-├── Dockerfile           # Image Docker
-├── docker-compose.yml   # Orchestration locale
-└── index.html           # Portail web
+├── web/
+├── docs/
+├── scripts/
+├── README.md
+├── .gitignore
+└── docker-compose.yml
 ```
 
-## 📝 Notes Importantes
+## Résultat attendu
 
-- Code source commenté et lisible
-- Pas de traces d'auto-génération
-- Peut être étendu avec d'autres jeux facilement
-- Tests écrits pour maintenir la qualité long terme
-
----
-
-**Statut** : ✅ Pipeline CI/CD complète et fonctionnelle
+Le projet est prêt pour la démonstration : code, tests, lint, audit et déploiement sont séparés, reproductibles et faciles à relancer.
 
 
 # Vérifier la structure

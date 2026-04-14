@@ -1,0 +1,23 @@
+{
+  "name": "keep-white-space",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:functional": "vitest run tests/functional",
+    "test:watch": "vitest watch",
+    "lint": "eslint src/**/*.js tests/**/*.mjs",
+    "lint:fix": "eslint src/**/*.js tests/**/*.mjs --fix",
+    "audit": "npm audit --audit-level=moderate",
+    "serve": "npx http-server . -p 8082 --cors",
+    "docker:build": "docker build -t keep-white-space:latest .",
+    "docker:run": "docker run --rm -p 8082:80 keep-white-space:latest",
+    "ci": "npm test && npm run lint && npm audit"
+  },
+  "devDependencies": {
+    "eslint": "^9.33.0",
+    "vitest": "^4.1.4"
+  }
+}

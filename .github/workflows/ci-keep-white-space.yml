@@ -1,0 +1,59 @@
+name: CI Keep White Space
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: games/keep-white-space
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: games/keep-white-space/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit and functional tests
+        id: tests
+        continue-on-error: true
+        run: npm test -- --reporter=verbose
+
+      - name: Run lint
+        id: lint
+        continue-on-error: true
+        run: npm run lint
+
+      - name: Run audit
+        id: audit
+        continue-on-error: true
+        run: npm run audit
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Keep White Space CI" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: ${{ steps.tests.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: ${{ steps.lint.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Audit: ${{ steps.audit.outcome }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail on critical issues
+        if: steps.tests.outcome == 'failure' || steps.lint.outcome == 'failure'
+        run: exit 1

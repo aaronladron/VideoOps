@@ -1,0 +1,90 @@
+name: Deploy Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  verify-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for latest CI runs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const required = new Set(['CI SpaceWord', 'CI Keep White Space']);
+            const sha = context.sha;
+            const maxAttempts = 20;
+
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              const response = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                head_sha: sha,
+                per_page: 100
+              });
+
+              const runs = response.data.workflow_runs.filter(run => required.has(run.name));
+              const completed = runs.length === required.size && runs.every(run => run.status === 'completed');
+              const succeeded = completed && runs.every(run => run.conclusion === 'success');
+
+              if (succeeded) {
+                core.info('All CI workflows succeeded for this SHA.');
+                return;
+              }
+
+              if (attempt === maxAttempts) {
+                core.setFailed('CI workflows are not ready or did not succeed for this commit.');
+                return;
+              }
+
+              core.info(`Waiting for CI workflows to finish (attempt ${attempt}/${maxAttempts})...`);
+              await new Promise(resolve => setTimeout(resolve, 15000));
+            }
+
+  deploy:
+    needs: verify-ci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Prepare site folder
+        run: |
+          mkdir -p site
+          cp -R web/. site/
+          mkdir -p site/games
+          cp -R games/spaceword site/games/spaceword
+          cp -R games/keep-white-space site/games/keep-white-space
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Summary
+        run: |
+          echo "## Deploy Pages" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: success" >> $GITHUB_STEP_SUMMARY
+          echo "- Target: GitHub Pages" >> $GITHUB_STEP_SUMMARY

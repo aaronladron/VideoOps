@@ -2,10 +2,11 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build:
+      context: ./web
     ports:
-      - "8080:8080"
+      - "8080:80"
     environment:
       - NODE_ENV=production
-    container_name: videogames-web
+    container_name: videoops-web
     restart: unless-stopped

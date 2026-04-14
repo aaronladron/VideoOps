@@ -1,6 +1,6 @@
 export default [
   {
-    files: ['web/**/*.js', 'scripts/**/*.mjs'],
+    files: ['src/**/*.js', 'tests/**/*.mjs'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module'
@@ -11,7 +11,7 @@ export default [
     }
   },
   {
-    files: ['web/**/*.js'],
+    files: ['src/**/*.js'],
     languageOptions: {
       globals: {
         window: 'readonly',
@@ -29,12 +29,16 @@ export default [
     }
   },
   {
-    files: ['scripts/**/*.mjs'],
+    files: ['tests/**/*.mjs'],
     languageOptions: {
       globals: {
         console: 'readonly',
         process: 'readonly',
-        URL: 'readonly'
+        URL: 'readonly',
+        clearInterval: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        setTimeout: 'readonly'
       }
     }
   }
