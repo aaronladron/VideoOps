@@ -417,7 +417,7 @@ function beginGame() {
 }
 
 function timeToString(time) {
-    //TODO - Entendi nada não mas tamo ai - https://tinloof.com/blog/how-to-build-a-stopwatch-with-html-css-js-react-part-2/
+    // Formatage du temps en mm:ss:cs.
     let diffInHrs = time / 3600000;
     let hh = Math.floor(diffInHrs);
 

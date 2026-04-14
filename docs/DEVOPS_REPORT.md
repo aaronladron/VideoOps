@@ -176,7 +176,7 @@ Implémenter un pipeline DevOps complet pour au minimum 2 jeux JavaScript avec :
 - ✅ Tâches subdivisées
 - ✅ Code maintenable et reproducible
 - ✅ Documentation claire
-- ✅ Code sans traces d'IA
+- ✅ Code original et maintenable
 
 ---
 
