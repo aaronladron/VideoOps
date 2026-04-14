@@ -203,4 +203,4 @@ graph TD
 
 ---
 
-**Besoin d'aide ?** Voir README.md et CONTRIBUTING.md
+**Besoin d'aide ?** Voir [README](../README.md) et [CONTRIBUTING](CONTRIBUTING.md)

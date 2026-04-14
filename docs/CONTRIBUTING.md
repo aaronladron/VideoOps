@@ -151,7 +151,7 @@ npm install --legacy-peer-deps
 npm run check:games
 
 # Vérifier qu'il n'y a pas de fichiers manquants
-ls games/SpaceWord/ games/keep-white-space/
+ls games/spaceword/ games/keep-white-space/
 ```
 
 ### "npm run lint" trouve des erreurs
@@ -185,7 +185,7 @@ Voir le workflow GitHub Actions pour :
 
 Vérifier d'abord :
 - Le README.md
-- DEVOPS_REPORT.md
+- docs/DEVOPS_REPORT.md
 - Les tests existants pour des exemples
 - L'historique des commits
 

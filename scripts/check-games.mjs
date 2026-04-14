@@ -42,6 +42,13 @@ const webFiles = [
 
 const docs = [
   'README.md',
+  'docs/QUICKSTART.md',
+  'docs/CONTRIBUTING.md',
+  'docs/DEPLOYMENT.md',
+  'docs/DEVOPS_REPORT.md',
+  'docs/STATUS.md',
+  'docs/CHANGELOG.md',
+  'docs/FILES.md',
   'docs/screenshots/.gitkeep',
   'docs/reports/.gitkeep',
   'docker-compose.yml',

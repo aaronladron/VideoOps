@@ -1,4 +1,3 @@
-docker-compose up
 # Quickstart
 
 ## Installation
@@ -56,7 +55,7 @@ npm run ci
 
 ## Ressources
 
-- [README.md](README.md)
+- [README.md](../README.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [DEPLOYMENT.md](DEPLOYMENT.md)
 - [STATUS.md](STATUS.md)
