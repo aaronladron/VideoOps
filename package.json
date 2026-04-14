@@ -1,0 +1,26 @@
+{
+  "name": "video-ops",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "check:games": "node scripts/check-games.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:functional": "vitest run tests/functional",
+    "test:watch": "vitest watch",
+    "lint": "eslint games/**/*.js scripts/**/*.mjs",
+    "lint:fix": "eslint games/**/*.js scripts/**/*.mjs --fix",
+    "audit": "npm audit --audit-level=moderate",
+    "serve": "npx http-server . -p 8080 --cors",
+    "docker:build": "docker build -t videogames:latest .",
+    "docker:run": "docker run --rm -p 8080:8080 videogames:latest",
+    "docker:compose": "docker-compose up",
+    "ci": "npm run check:games && npm test && npm run lint && npm audit",
+    "ci:local": "npm run ci || true"
+  },
+  "devDependencies": {
+    "eslint": "^9.33.0",
+    "vitest": "^4.1.4"
+  }
+}
