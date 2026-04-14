@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.github
+tests
+scripts
+package-lock.json
+DEVOPS_REPORT.md
+README.md
+.DS_Store
+*.log
