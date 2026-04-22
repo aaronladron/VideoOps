@@ -29,6 +29,7 @@ describe('Keep White Space - classes utilitaires', () => {
 
   test('Vec.cross calcule le produit vectoriel', () => {
     expect(vm.runInContext('new Vec(1, 2).cross(new Vec(3, 4).mul(-2, 3))', context)).toBe(24);
+    expect(vm.runInContext('new Vec(1, 2).cross()', context)).toBe(24);
   });
 
   test('Vec.add avec un nombre retourne NaN', () => {
